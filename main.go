@@ -13,9 +13,6 @@ func copyFile(from, to string) error {
 	if err != nil {
 		return err
 	}
-	if err = os.MkdirAll(filepath.Dir(to), 0755);  err != nil {
-		return err
-	}
 	return ioutil.WriteFile(to, inFile, 0644)
 }
 
@@ -28,16 +25,21 @@ func main() {
 		if err != nil {
 			return err
 		}
+		// Full path of destination file
+		dest := strings.ReplaceAll(path, os.Args[1], "")
+		fullDest := filepath.Join(os.Args[2], dest)
 		if info.IsDir() {
+			if err = os.MkdirAll(fullDest, 0755);  err != nil {
+				return err
+			}
 			return nil
 		}
 		if !strings.HasSuffix(info.Name(), os.Args[3]) {
 			return nil
 		}
 		// Copy file to new directory
-		dest := strings.ReplaceAll(path, os.Args[1], "")
 		fmt.Println(dest)
-		if err := copyFile(path, filepath.Join(os.Args[2], dest)); err != nil {
+		if err := copyFile(path, fullDest); err != nil {
 			return err
 		}
 		return nil
