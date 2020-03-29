@@ -36,11 +36,9 @@ func main() {
 		fullDest := filepath.Join(os.Args[2], dest)
 		// Create directory in target directory
 		if info.IsDir() {
-			if err = os.MkdirAll(fullDest, 0755);  err != nil {
-				return err
-			}
-			return nil
+			return os.MkdirAll(fullDest, 0755)
 		}
+		// Ignore if file doesn't have specified extension
 		if !strings.HasSuffix(info.Name(), os.Args[3]) {
 			return nil
 		}
